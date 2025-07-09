@@ -1,0 +1,98 @@
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+
+@prefix investigation: <https://ontology.caseontology.org/case/investigation/> .
+@prefix icac-case:      <https://ontology.unifiedcyberontology.org/icac/case-management#> .
+@prefix icac-forensics: <https://ontology.unifiedcyberontology.org/icac/forensics#> .
+@prefix icac-physical-evidence: <https://ontology.unifiedcyberontology.org/icac/physical-evidence#> .
+@prefix uco-observable: <https://ontology.unifiedcyberontology.org/uco/observable/> .
+@prefix types:          <https://ontology.unifiedcyberontology.org/uco/types/> .
+
+#################################################################
+# SHACL Shapes for "Example Knowledge Graph" validation
+#################################################################
+
+############################################
+# Investigation container must have label + status
+############################################
+investigation:InvestigationShape
+    a sh:NodeShape ;
+    sh:targetClass investigation:Investigation ;
+    sh:property [
+        sh:path rdfs:label ;
+        sh:minCount 1 ;
+    ] ;
+    sh:property [
+        sh:path investigation:investigationStatus ;
+        sh:minCount 1 ;
+    ] .
+
+############################################
+# Search-warrant authorization
+############################################
+icac-case:SearchWarrantShape
+    a sh:NodeShape ;
+    sh:targetClass icac-case:SearchWarrant ;
+    sh:property [
+        sh:path investigation:authorizationIdentifier ;
+        sh:minCount 1 ;
+        sh:datatype xsd:string ;
+    ] ;
+    sh:property [
+        sh:path dcterms:issued ;
+        sh:minCount 1 ;
+        sh:datatype xsd:dateTime ;
+    ] .
+
+############################################
+# Evidence seizure must specify seizedItem
+############################################
+icac-physical-evidence:EvidenceSeizureShape
+    a sh:NodeShape ;
+    sh:targetClass icac-physical-evidence:EvidenceSeizure ;
+    sh:property [
+        sh:path icac-physical-evidence:seizedItem ;
+        sh:minCount 1 ;
+    ] .
+
+############################################
+# Device imaging action must process evidence
+############################################
+icac-forensics:DeviceImagingShape
+    a sh:NodeShape ;
+    sh:targetClass icac-forensics:DeviceImaging ;
+    sh:property [
+        sh:path icac-forensics:processesEvidence ;
+        sh:minCount 1 ;
+    ] .
+
+############################################
+# Files must carry a hash value
+############################################
+uco-observable:FileShape
+    a sh:NodeShape ;
+    sh:targetClass uco-observable:File ;
+    sh:property [
+        sh:path uco-observable:hash ;
+        sh:minCount 1 ;
+    ] .
+
+############################################
+# Hashes must have digest and hashMethod
+############################################
+types:HashShape
+    a sh:NodeShape ;
+    sh:targetClass types:Hash ;
+    sh:property [
+        sh:path types:digest ;
+        sh:minCount 1 ;
+        sh:datatype xsd:string ;
+    ] ;
+    sh:property [
+        sh:path types:hashMethod ;
+        sh:minCount 1 ;
+        sh:datatype xsd:string ;
+    ] . 
