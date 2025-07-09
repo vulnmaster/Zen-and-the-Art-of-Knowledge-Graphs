@@ -1,5 +1,26 @@
-# DFRWS USA Forensic Rodeo 2024
+# DFRWS USA Forensic Rodeo 2025
 ## Challenge Track: “Zen and the Art of Knowledge Graphs for Law Enforcement Investigations, Operations, and Digital Forensics”
+
+### 0  Getting Started
+To begin, clone this template repository and set up a Python virtual environment:
+
+```bash
+# 1) Clone the repo (use your own fork or clone directly)
+ git clone https://github.com/vulnmaster/Zen-and-the-Art-of-Knowledge-Graphs.git
+ cd Zen-and-the-Art-of-Knowledge-Graphs
+
+# 2) Create a virtual environment (optional but recommended)
+ python -m venv .venv
+ source .venv/bin/activate       # Windows: .venv\Scripts\activate
+
+# 3) Install the minimal dependencies
+ pip install -r requirements.txt
+
+# 4) Run the validator on the example graph
+ python Example/validate_example_graph.py
+```
+
+You should see a ✅ **Validation passed** message.  This confirms your environment is ready.  From here you can begin replacing the example artefacts with your own.
 
 ### 1  Objective
 Model a complete child-protection investigation—from hotline tip to final technical findings—using semantic ontologies.
@@ -13,28 +34,24 @@ Participants will:
      – phased undercover operation,  
      – digital-forensics examination, and  
      – presentation of results.
-2. **(Bonus)** Build a simple UI that auto-generates the undercover-operation plan.
 
 ### 2  Permitted Technologies
 • Ontologies  
   – Unified Cyber Ontology (UCO)  
   – CASE Ontology  
-  – Experimental Crimes Against Children (CAC) ontology family  
-• Any additional tooling you need is allowed
+  – Experimental Crimes Against Children (CAC) ontology   
+• Any additional tooling you **think** you need is allowed
 
 ### 3  What to Submit
 1. **Knowledge graph** — single Turtle file (`your_team.ttl`).  
    • Must be readable by any RDF-compliant tool.  
    • Should support ChatGPT (or similar) reconstructing the narrative in plain English.  
    • Perfection is not required; clarity and correct ontology usage matter most.
-2. **(Bonus) UI demo** — lightweight app that produces the undercover-operation plan from your graph.  
-   Show it to a Forensic Rodeo judge for extra points.
 
 ### 4  Scoring Highlights
 • Coverage of all investigative phases and entities  
 • Correct, consistent ontology usage  
 • Readability of the graph (can another team query it and understand the story?)  
-• Bonus points for the UI generator
 
 ### 5  Background References
 #### Unified Cyber Ontology (UCO)
