@@ -98,7 +98,7 @@ The CAC family supplies standard vocabularies so agencies, researchers, and tech
 ---
 
 ### 6  Walk-through Example (`/Example` folder)
-The `Example/` directory contains a fully-worked reference that shows the **minimum deliverables** working together.  Review it, then replace it with your own artefacts:
+The `Example/` directory contains a fully-worked reference that shows the **minimum deliverables** working together.  Review it, then replace it with your own artifacts:
 
 | File | Purpose |
 | ---- | ------- |
@@ -107,6 +107,7 @@ The `Example/` directory contains a fully-worked reference that shows the **mini
 | `example_knowledge_graph.ttl` | RDF/Turtle implementation of the narrative using UCO, CASE and CAC ontologies.  Build your own graph from your narrative + mappings. |
 | `example_knowledge_graph_shapes.ttl` | SHACL shapes that define the **minimum semantic constraints** (e.g., every `File` needs a hash).  Adapt or extend this for your domain. |
 | `validate_example_graph.py` | Python script that runs `pyshacl` to validate the graph against the shapes.  Use it—or your own variant—to test your submission. |
+| `generate_graphviz.py` | Utility to convert a Turtle graph to GraphViz DOT/PNG for interactive visual exploration. |
 
 #### Recommended Workflow for Participants
 1. **Draft a unique narrative** (or adapt an existing case) that covers the required investigation phases.
@@ -123,3 +124,38 @@ Feel free to borrow patterns from the example files, but your final submission s
 - **Validation Fails**: If SHACL reports errors, verify required properties (e.g., every `uco-observable:File` needs a `uco-types:Hash`).
 - **Querying the Graph**: Use tools like rdflib in Python; if stuck, load into GraphDB for visual queries.
 - **Overwhelmed by Ontologies?**: See `ontology_cheatsheet.md` for summaries.
+
+### Visualizing the example knowledge graph
+
+You can export `Example/example_knowledge_graph.ttl` to GraphViz (DOT) – and optionally PNG – using the helper script:
+
+```bash
+# Activate venv first
+. .venv/Scripts/activate  # Windows PowerShell
+
+python Example/generate_graphviz.py Example/example_knowledge_graph.ttl \
+  --png Example/example_knowledge_graph.png
+```
+
+* A `.dot` file is always produced (same basename by default).
+* If GraphViz’s `dot` executable is on your PATH, a PNG (or SVG) is rendered automatically; otherwise you can open the DOT file in any graph viewer.
+
+The script truncates very large graphs to the first 2,000 triples for readability – use `--max-triples` to change that.
+
+> **Tip – GraphViz install**  
+> • Windows: Download from https://graphviz.org/download/ and ensure `dot.exe` is in your `PATH`.  
+> • macOS: `brew install graphviz`  
+> • Linux: `sudo apt install graphviz` (or distro equivalent).
+>
+> After installation you can also render manually:
+>
+> ```bash
+> dot -Tsvg Example/example_knowledge_graph.dot -o graph.svg
+> ```
+>
+> – Use SVG for scalable, zoom-friendly diagrams; PNG for quick screenshots.
+>
+> **Viewing options**  
+> • Any browser opens the generated `.svg` directly.  
+> • VS Code has a built-in DOT preview extension.  
+> • Gephi or yEd can import the `.dot` file for interactive exploration.
