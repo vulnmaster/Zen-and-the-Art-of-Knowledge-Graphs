@@ -71,9 +71,12 @@ def build_dot(graph: Graph) -> "pydot.Dot":
 
 
 def render_graph(dot_graph: "pydot.Dot", dot_path: Path, png_path: Path | None = None):
-    # Ensure UTF-8 so emojis or non-ASCII chars do not break on Windows CP1252
-    dot_graph.write_raw(str(dot_path), encoding="utf-8")
-    print(f"DOT file written to {dot_path}")
+    # Write DOT text ourselves with UTF-8 to avoid Windows default code page issues.
+    dot_text = dot_graph.to_string()
+    dot_path.parent.mkdir(parents=True, exist_ok=True)
+    with dot_path.open("w", encoding="utf-8") as fh:
+        fh.write(dot_text)
+    print(f"DOT file written to {dot_path} (UTF-8)")
 
     if png_path is not None:
         try:
