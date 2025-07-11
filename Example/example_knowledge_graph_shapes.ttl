@@ -11,6 +11,12 @@
 @prefix uco-observable: <https://ontology.unifiedcyberontology.org/uco/observable/> .
 @prefix types:          <https://ontology.unifiedcyberontology.org/uco/types/> .
 
+# Add UCO action and core prefixes for new shapes
+@prefix uco-action: <https://ontology.unifiedcyberontology.org/uco/action/> .
+@prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
+@prefix icac-temporal: <https://ontology.unifiedcyberontology.org/icac/temporal#> .
+
 #################################################################
 # SHACL Shapes for "Example Knowledge Graph" validation
 #################################################################
@@ -68,6 +74,56 @@ icac-forensics:DeviceImagingShape
         sh:path icac-forensics:processesEvidence ;
         sh:minCount 1 ;
     ] .
+
+############################################
+# New Shape: UCO Actions must have performer and startTime (for lifecycle traceability)
+############################################
+uco-action:ActionShape
+    a sh:NodeShape ;
+    sh:targetClass uco-action:Action ;
+    sh:property [
+        sh:path uco-action:performer ;  # Requires at least one performer (e.g., actor/organization)
+        sh:minCount 1 ;
+        sh:nodeKind sh:BlankNodeOrIRI ;
+    ] ;
+    sh:property [
+        sh:path uco-action:startTime ;  # Requires startTime for sequencing
+        sh:minCount 1 ;
+        sh:datatype xsd:dateTime ;
+    ] ;
+    sh:property [
+        sh:path uco-action:endTime ;  # Optional but encouraged for complete lifecycles
+        sh:minCount 0 ;
+        sh:datatype xsd:dateTime ;
+    ] ;
+    sh:property [
+        sh:path uco-action:instrument ;  # Optional tool/instrument
+        sh:minCount 0 ;
+    ] ;
+    sh:property [
+        sh:path uco-action:environment ;  # Optional location/environment
+        sh:minCount 0 ;
+    ] ;
+    sh:property [
+        sh:path uco-action:result ;  # Optional result (e.g., hash or provenance)
+        sh:minCount 0 ;
+    ] ;
+    sh:property [
+        sh:path icac-temporal:temporallyPrecedes ;  # Optional sequencing for action chains
+        sh:minCount 0 ;
+        sh:nodeKind sh:BlankNodeOrIRI ;
+    ] .
+
+############################################
+# New Shape: Locations must have label or coordinates
+############################################
+uco-location:LocationShape
+    a sh:NodeShape ;
+    sh:targetClass uco-location:Location ;
+    sh:or (
+        [ sh:path rdfs:label ; sh:minCount 1 ; sh:datatype xsd:string ]
+        [ sh:path uco-location:latitude ; sh:minCount 1 ; sh:datatype xsd:decimal ]
+    ) .
 
 ############################################
 # Files must carry a hash value

@@ -35,6 +35,24 @@ Participants will:
      – digital-forensics examination, and  
      – presentation of results.
 
+### Quick Start Tutorial
+If you're new to RDF/Turtle or these ontologies, try this mini-example to model just the "hotline receipt" phase before tackling the full challenge.
+
+1. **Draft a Simple Narrative**: Create a file `my_mini_narrative.md` with: "A hotline receives a CyberTip from NCMEC about suspected CSAM on a device."
+2. **Map to Ontologies**: In a file `my_mini_mappings.md`, note: Entity "CyberTip" → IRI `<http://example.org/cybertip1>`, Class `icac:HotlineReport` (from CAC).
+3. **Build a Mini Graph**: Create `my_mini_graph.ttl`:
+   ```
+   @prefix icac: <http://example.org/icac-core#> .
+   @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+   <http://example.org/cybertip1> a icac:HotlineReport ;
+       icac:reportDate "2025-01-01"^^xsd:date ;
+       icac:source "NCMEC" .
+   ```
+4. **Validate It**: Use SHACL (adapt from `Example/example_knowledge_graph_shapes.ttl`) and run a script like `validate_example_graph.py` on your mini files. If it passes, you've captured your first "flag"!
+
+This warm-up covers basics—scale it up for the full investigation.
+
 ### 2  Permitted Technologies
 • Ontologies  
   – Unified Cyber Ontology (UCO)  
@@ -52,6 +70,13 @@ Participants will:
 • Coverage of all investigative phases and entities  
 • Correct, consistent ontology usage  
 • Readability of the graph (can another team query it and understand the story?)  
+
+**Scoring Checklist** (aim for 100 points):
+- [ ] Covers all phases (hotline, intake, operation, forensics, presentation) – 20 points
+- [ ] Uses at least one class/property from UCO, CASE, and CAC – 20 points
+- [ ] Graph supports 3+ SPARQL queries (e.g., "List forensic tools" – see examples in `/Example/example_SPARQL_queries/`) – 20 points
+- [ ] Passes SHACL validation with no errors – 20 points
+- [ ] Includes a custom "flag" (e.g., a hashed value modeled in the graph) – 20 points (bonus for creativity)
 
 ### 5  Background References
 #### Unified Cyber Ontology (UCO)
@@ -92,3 +117,9 @@ The `Example/` directory contains a fully-worked reference that shows the **mini
 6. Iterate until your script reports that the graph **conforms**.
 
 Feel free to borrow patterns from the example files, but your final submission should be based on **your own narrative and data**.
+
+### Troubleshooting Common Issues
+- **Namespace Conflicts**: Ensure prefixes match ontology files (e.g., CAC uses `icac:` – check `icac-core.ttl`).
+- **Validation Fails**: If SHACL reports errors, verify required properties (e.g., every `uco-observable:File` needs a `uco-types:Hash`).
+- **Querying the Graph**: Use tools like rdflib in Python; if stuck, load into GraphDB for visual queries.
+- **Overwhelmed by Ontologies?**: See `ontology_cheatsheet.md` for summaries.

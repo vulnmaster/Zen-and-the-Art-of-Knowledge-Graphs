@@ -21,6 +21,8 @@
 @prefix icac-undercover: <https://ontology.unifiedcyberontology.org/icac/undercover#> .
 @prefix uco-action:   <https://ontology.unifiedcyberontology.org/uco/action/> .
 @prefix icac-usa-federal: <https://ontology.unifiedcyberontology.org/icac/usa-federal-law#> .
+@prefix role: <https://ontology.unifiedcyberontology.org/uco/role/> .
+@prefix icac-temporal: <https://ontology.unifiedcyberontology.org/icac/temporal#> .
 
 # Local instance namespaces
 @prefix case:  <https://example.org/wa_icac_2024_master_001/case#> .
@@ -101,10 +103,10 @@ doc:sw-kc-24-0317 a investigation:Authorization , icac-case:SearchWarrant ;
 # Actors & organisations
 #################################################################
 
-det:s-martinez a investigation:Investigator ;
+det:s-martinez a investigation:Investigator , role:Role ;  # Dual-type using valid UCO role class
     uco-core:description "Detective Sarah Martinez"@en .
 
-det:m-chen a investigation:Investigator ;
+det:m-chen a investigation:Investigator , role:Role ;
     uco-core:description "Detective Michael Chen"@en .
 
 person:john-anderson a investigation:Subject ;
@@ -144,10 +146,16 @@ hash:sha256-2c90ebcd a types:Hash ;
 # Evidence seizure action
 #################################################################
 
-action:seizure-iphone-1 a icac-physical-evidence:EvidenceSeizure ;
+action:seizure-iphone-1 a icac-physical-evidence:EvidenceSeizure, uco-action:Action ;
     rdfs:label "Evidence seizure at arrest (iPhone 1)"@en ;
     icac-physical-evidence:seizedItem dev:iphone-1 ;
-    uco-core:description "Seizure of suspect’s iPhone during arrest on 2024-03-18"@en .
+    uco-core:description "Seizure of suspect’s iPhone during arrest on 2024-03-18"@en ;
+    uco-action:performer det:m-chen ;  # From narrative's operational plan
+    uco-action:instrument tool:takedown-equipment ;  # Add tool if relevant (e.g., cuffs)
+    uco-action:environment loc:arrest-location ;  # Link to location from narrative
+    uco-action:result pr:pr-seizure-iphone ;  # Link to provenance result
+    uco-action:startTime "2024-03-18T19:20:02-07:00"^^xsd:dateTime ;
+    icac-temporal:temporallyPrecedes action:device-imaging-iphone .  # Sequence to forensics phase
 
 #################################################################
 # Forensic processing
@@ -169,9 +177,13 @@ action:arrest-01 a icac-tactical:HighRiskArrest ;
 # Victim rescue summary
 #################################################################
 
-action:victim-rescue a icac-impact:VictimSupport ;
+action:victim-rescue a icac-impact:VictimSupport , uco-action:Action ;
     rdfs:label "Victim rescue operation"@en ;
-    uco-core:description "Safe recovery of victim 2024-03-18 17:45"@en .
+    uco-core:description "Safe recovery of victim 2024-03-18 17:45"@en ;
+    uco-action:performer person:cps_valdez , person:emt_unit12 ;  # From narrative Phase 6
+    uco-action:environment loc:victim-location ;  # Add from narrative
+    uco-action:startTime "2024-03-18T17:45:00-07:00"^^xsd:dateTime ;
+    icac-temporal:temporallyPrecedes action:pretrial-hearing .  # Link to legal phase
 
 #################################################################
 # Simple linkage examples
@@ -228,11 +240,15 @@ action:victim-rescue uco-core:externalIdentifier "uuid:7b616c46-15cb-4faf-aa01-d
 # Additional timeline actions (Phase 1 & 2)
 #################################################################
 
-action:hotline-report a investigation:InvestigativeAction ;
+action:hotline-report a investigation:InvestigativeAction, uco-action:Action ;  # Dual-type
     rdfs:label "Hotline report received (NL-IH-148921)"@en ;
     uco-core:description "InHope hotline logs ShadowNet post, eight media URLs and encrypted blob"@en ;
     uco-core:externalIdentifier "uuid:0d7062b5-0b54-49c9-be78-73ba7e62a3c1" ;
-    core:startTime "2024-03-15T14:30:12-07:00"^^xsd:dateTime .
+    uco-action:startTime "2024-03-15T14:30:12-07:00"^^xsd:dateTime ;  # Use UCO property for consistency
+    uco-action:endTime "2024-03-15T14:34:47-07:00"^^xsd:dateTime ;    # Add endTime from narrative
+    uco-action:performer org:ncmec ;  # Link to organization as performer (from narrative)
+    uco-action:environment loc:inHope-nl ;  # Add inferred location from narrative
+    uco-action:result file:media-urls-bundle .  # Link to resulting artifact (add this new entity below)
 
 case:tip investigation:wasInformedBy action:hotline-report .
 
@@ -407,15 +423,15 @@ action:pretrial-hearing a icac-usa-federal:PreTrialPhase ;
 # CPS liaison & EMT persons
 #################################################################
 
-person:cps_valdez a uco-identity:Person ;
+person:cps_valdez a uco-identity:Person , role:Role ;
     rdfs:label "CPS Supervisor Valdez"@en ;
     uco-core:externalIdentifier "uuid:a9ae99b0-2836-4fa4-b4e2-09847162f216" .
 
-person:emt_unit12 a uco-identity:Person ;
+person:emt_unit12 a uco-identity:Person , role:Role ;
     rdfs:label "EMT Unit 12"@en ;
     uco-core:externalIdentifier "uuid:1e68bc03-9a1e-4b37-a48c-7d876c002c21" .
 
-action:victim-rescue uco-action:performedBy person:cps_valdez , person:emt_unit12 .
+action:victim-rescue uco-action:performer person:cps_valdez , person:emt_unit12 .
 
 #################################################################
 # Affidavit artefact

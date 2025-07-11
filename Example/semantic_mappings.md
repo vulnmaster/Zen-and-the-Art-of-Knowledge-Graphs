@@ -128,11 +128,28 @@ Statutes:
 
 ---
 
+## 9  UCO Action and Lifecycle Properties (New Section)
+
+| Property | IRI | Ontology | Narrative Usage Example |
+|----------|-----|----------|-------------------------|
+| Performer of action | `uco-action:performer` | UCO `action.ttl` | Links actors (e.g., Det. Martinez) to events like digital recon |
+| Instrument/tool used | `uco-action:instrument` | UCO `action.ttl` | Tools like UFED in device imaging (from Phase 5) |
+| Action result | `uco-action:result` | UCO `action.ttl` | Hashes or provenance records from PhotoDNA/analysis (Appendices B/D) |
+| Action environment (e.g., location) | `uco-action:environment` | UCO `action.ttl` | Arrest location in Phase 4 |
+| Action start time | `uco-action:startTime` | UCO `action.ttl` | Timestamps from master chronology (e.g., 2024-03-15 14:30:12) |
+| Action end time | `uco-action:endTime` | UCO `action.ttl` | End of events like NCMEC processing |
+| Action precedes (lifecycle sequencing) | `icac-temporal:temporallyPrecedes` | ICAC temporal module | Chains hotline receipt → intake → warrant (Phases 1-2) |
+| Action follows | `icac-usa-federal:followsPhase` | ICAC USA federal law module | Reverse chaining for queries |
+
+These properties ensure full coverage of narrative relationships, such as actor-tool-action-result chains and phase sequencing.
+
+---
+
 ## 8  Namespace Prefixes (present in TTL)
 ```
 @prefix investigation: <https://ontology.caseontology.org/case/investigation/> .
-@prefix uco-observable: <https://ontology.unifiedcyberontology.org/uco/observable#> .
-@prefix uco-location:   <https://ontology.unifiedcyberontology.org/uco/location#> .
+@prefix uco-observable: <https://ontology.unifiedcyberontology.org/uco/observable/> .
+@prefix uco-location:   <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-identity:   <https://ontology.unifiedcyberontology.org/uco/identity#> .
 @prefix icac-tactical:  <https://ontology.unifiedcyberontology.org/icac/tactical#> .
 @prefix icac-forensics: <https://ontology.unifiedcyberontology.org/icac/forensics#> .

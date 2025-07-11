@@ -50,11 +50,22 @@ def main():
         shacl_graph=shapes_graph,
         advanced=True,
         inplace=True,
-        debug=False,
+        debug=True,  # Enable debug for detailed tracing of new UCO shapes
     )
 
     if conforms:
         print("\n✅ Validation passed – data graph conforms to all SHACL shapes.")
+        # Add quick UCO-specific check (query for actions without performers)
+        uco_action_query = """
+        PREFIX uco-action: <https://ontology.unifiedcyberontology.org/uco/action#>
+        SELECT ?action WHERE {
+            ?action a uco-action:Action .
+            FILTER NOT EXISTS { ?action uco-action:performer ?performer }
+        }
+        """
+        missing_performers = list(data_graph.query(uco_action_query))
+        if missing_performers:
+            print("⚠️ Warning: All shapes passed, but some UCO actions lack performers (check narrative mappings).")
         sys.exit(0)
     else:
         print("\n❌ Validation FAILED – data graph does not conform. Details:\n")
