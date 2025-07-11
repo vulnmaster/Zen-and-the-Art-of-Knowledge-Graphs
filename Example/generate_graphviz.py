@@ -71,7 +71,8 @@ def build_dot(graph: Graph) -> "pydot.Dot":
 
 
 def render_graph(dot_graph: "pydot.Dot", dot_path: Path, png_path: Path | None = None):
-    dot_graph.write_raw(str(dot_path))
+    # Ensure UTF-8 so emojis or non-ASCII chars do not break on Windows CP1252
+    dot_graph.write_raw(str(dot_path), encoding="utf-8")
     print(f"DOT file written to {dot_path}")
 
     if png_path is not None:
