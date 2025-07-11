@@ -80,7 +80,11 @@ def render_graph(dot_graph: "pydot.Dot", dot_path: Path, png_path: Path | None =
 
     if png_path is not None:
         try:
-            dot_graph.write_png(str(png_path))
+            try:
+                dot_graph.write_png(str(png_path), encoding="utf-8")
+            except TypeError:
+                # older pydot versions do not accept encoding kwarg
+                dot_graph.write_png(str(png_path))
             print(f"PNG file written to {png_path}")
         except Exception as e:
             print("Warning: failed to render PNG with GraphViz — is GraphViz installed and in PATH?", file=sys.stderr)
