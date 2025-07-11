@@ -1,2 +1,4 @@
 rdflib>=6.2.0
 pyshacl>=0.22.0 
+pygraphviz; sys_platform != 'win32'
+pydot 
